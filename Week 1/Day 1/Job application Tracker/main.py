@@ -1,16 +1,28 @@
-import json
+import json,os
 
 #Add Job applications
 def add():
-  data = {}
-  data['ID'] = len(data) + 1
-  data['Company'] = input('Company: ')
-  data['Position'] = input('Position: ')
-  data['Location'] = input('Location: ')
-  data['Status'] = input('Status: ')
+    #Load the Json FIle first
+    FILE = 'data_file.json'
+    # Check if the Json Exists
+    if os.path.exists(FILE):
+        with open(FILE,'r') as file:
+            applications = json.load(file)
+    else:
+        applications = []
+    
   
-  with open('data_file.json',"w") as file:
-      json.dump(data,file)
+    data = {}
+    data['ID'] = len(data) + 1
+    data['Company'] = input('Company: ')
+    data['Position'] = input('Position: ')
+    data['Location'] = input('Location: ')
+    data['Status'] = input('Status: ')
+
+    applications.append(data)
+
+    with open('data_file.json',"w") as file:
+        json.dump(applications,file)
 
 
 
