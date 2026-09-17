@@ -13,11 +13,11 @@ def add():
     
   
     data = {}
-    data['ID'] = len(data) + 1
-    data['Company'] = input('Company: ')
-    data['Position'] = input('Position: ')
-    data['Location'] = input('Location: ')
-    data['Status'] = input('Status: ')
+    data['ID'] = len(applications) + 1
+    data['Company'] = input('Company: ').lower()
+    data['Position'] = input('Position: ').lower()
+    data['Location'] = input('Location: ').lower()
+    data['Status'] = input('Status: ').lower()
 
     applications.append(data)
 
@@ -26,16 +26,18 @@ def add():
 
 
 
-#View one Job application
+#View Job application by status
 def view():
     with open('data_file.json', 'r') as file:
         data = json.load(file)
-    print(data)
+    while True:
+        search_status = input('What job status are u looking for? (Applied,Interview,Rejected,Accepted) ')
+        for application in data:
+            if application['Status'] == search_status.lower():
+                print(application)
+        break
 
-
-#Search for Job applications
-
-
+    
 
 #Update Job application
 
@@ -44,7 +46,13 @@ def view():
 
 
 #View all the Job applications
-
+def show_application():
+    with open('data_file.json', 'r') as file:
+        data = json.load(file)
+    while True:
+        for applications in data:
+            print(f"Application {applications['ID']} : {applications}")
+        break
 
 
 
@@ -54,24 +62,33 @@ def view():
 def menu():
     
     while True:
+
+        print("1. Add an Job Application")
+        print("2. View all Job applications")
+        print("3. View Job application by Status")
+        print("4. Update Job Application")
+        print("5. Delete Job application")
+        print("6. Exit program")
+        
         user_input = int(input("Choose a Option 1-7: "))
+        
+
         if user_input == 1:
             add()
-            print('Your application has been added')
+            print('Your application has been added!!!')
         elif user_input == 2:
-            view()
-            print("View") 
+            show_application()
+            print('Here is all the applications!!!')
         elif user_input == 3:
-            print("Search")
+            view()
+            print("Here is the searched for application!!!")
         elif user_input == 4:
-            print("Update") 
+            print("Application updated!!!") 
         elif user_input == 5:
-            print("Delete") 
+            print("Application is deleted!!!") 
         elif user_input == 6:
-            print("Show")
-        elif user_input == 7:
             print("Thank you for using my CLI program")
-            break
+            exit
         else:
             print("You can only enter a number between 1 - 7")
 
