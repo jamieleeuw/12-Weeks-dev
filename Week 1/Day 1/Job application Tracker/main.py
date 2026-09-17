@@ -1,9 +1,10 @@
 import json,os
 
+FILE = 'data_file.json'
 #Add Job applications
 def add():
     #Load the Json FIle first
-    FILE = 'data_file.json'
+    
     # Check if the Json Exists
     if os.path.exists(FILE):
         with open(FILE,'r') as file:
@@ -21,14 +22,14 @@ def add():
 
     applications.append(data)
 
-    with open('data_file.json',"w") as file:
+    with open(FILE,"w") as file:
         json.dump(applications,file)
 
 
 
 #View Job application by status
 def view():
-    with open('data_file.json', 'r') as file:
+    with open(FILE, 'r') as file:
         data = json.load(file)
     while True:
         search_status = input('What job status are u looking for? (Applied,Interview,Rejected,Accepted) ')
@@ -40,6 +41,36 @@ def view():
     
 
 #Update Job application
+def update_application():
+    with open(FILE, 'r') as file:
+        data = json.load(file)
+    valid_fields = ['company', 'position', 'location', 'status']
+    while True:
+        fields = input("What do you wanna update (Company/Position/Location/Status) : ")
+        if fields not in valid_fields:
+            print("These are the only options: (Company/Position/Location/Status)")
+            continue
+        id_input = input("ID of the application you want to update: ").strip()
+        if not id_input.isdigit() or int(id_input) <= 0:
+            print("ID's can't be less than or equal to 0")
+            continue
+        target_id = int(id_input)
+
+        found = False
+        for application in data:
+            if application['ID'] == target_id:
+                application[fields.capitalize()] = input("What do you want to change it to? : ")
+                found = True
+                break
+
+        if found:
+            with open(FILE, 'w') as file:
+                json.dump(data, file)
+            print("Updated successfully.")
+        else:
+            print("ID doesn't exist.")
+        break
+
 
 
 #Delete a job application
@@ -83,7 +114,7 @@ def menu():
             view()
             print("Here is the searched for application!!!")
         elif user_input == 4:
-            print("Application updated!!!") 
+            update_application()
         elif user_input == 5:
             print("Application is deleted!!!") 
         elif user_input == 6:
