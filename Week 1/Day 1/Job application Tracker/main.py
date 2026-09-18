@@ -1,6 +1,6 @@
 import json, os
 
-FILE = "data_file.json"
+FILE = "data_file.json" #Set Json file Location to a variable to keep consistency
 
 
 # Add Job applications
@@ -115,7 +115,7 @@ def show_application():
         break
 
 
-# Create Menu to display Option to Choose
+# Create Menu to display Options to Choose
 def menu():
 
     while True:
@@ -147,7 +147,7 @@ def menu():
             print("Thank you for using my CLI program")
             break
         else:
-            print("You can only enter a number between 1 - 7")
+            print("You can only enter a number between 1 - 6")
 
 
 menu()
