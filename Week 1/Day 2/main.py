@@ -1,6 +1,8 @@
 import src.api_client.client as todo
 
-
+def input_():
+    user_choice = int(input('Choose a number: '))
+    return user_choice
 def menu():
     print("1. View all TODO's")
     print("2. View one todo")
@@ -15,15 +17,15 @@ def menu():
        if choice == 1:
            todo.view_todo()
        elif choice == 2:
-           todo.view_todo_by_id(input('What ID are you Looking For?: '))
+           todo.view_todo_by_id(input_())
        elif choice == 3:
-           todo.post_todo(input('What UserID are you Looking For?: '))
+           todo.post_todo(input_())
        elif choice == 4:
-           print("4")
+           todo.add_todo()
        elif choice == 5:
-           print("5")
+           todo.update_todo(input_())
        elif choice == 6:
-           print("6")
+           todo.delete_todo()
        elif choice == 7:
             print("Thank you for using my CLI TODO List!!!")
             break
