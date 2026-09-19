@@ -3,6 +3,7 @@ import src.api_client.client as todo
 def input_():
     user_choice = int(input('Choose a number: '))
     return user_choice
+
 def menu():
     print("1. View all TODO's")
     print("2. View one todo")

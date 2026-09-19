@@ -44,7 +44,12 @@ def post_todo(userId):
 
 #Create a Todo & add to the List
 def add_todo():
-    pass
+    response = requests.post(LINK)
+    print(f"Status Code: {response.status_code}")
+    print(response.json())
+    #Ideas for tommor 
+    #Find the highest ID to get the UserID & task ID
+
 #Update a Todo in the List
 def update_todo():
     pass
