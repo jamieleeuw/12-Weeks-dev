@@ -1,8 +1,12 @@
 import src.api_client.client as todo
 
 def input_():
-    user_choice = int(input('Choose a number: '))
-    return user_choice
+    try:
+        user_choice = int(input('Choose a number: '))
+        return user_choice
+    except ValueError:
+        print("Please enter a valid number.")
+    
 
 def menu():
 
@@ -14,8 +18,13 @@ def menu():
        print("5. Update todo")
        print("6. Delete todo")
        print("7. Exit")
-    
-       choice = int(input('Choose an option from (1-7): '))
+
+       try:
+        choice = int(input('Choose an option from (1-7): '))
+       except ValueError:
+           print("Only Enter Valid Numbers!!")
+           continue
+       
        if choice == 1:
            todo.view_todo()
        elif choice == 2:
