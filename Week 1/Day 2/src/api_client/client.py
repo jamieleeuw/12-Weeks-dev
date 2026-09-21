@@ -44,15 +44,44 @@ def post_todo(userId):
 
 #Create a Todo & add to the List
 def add_todo():
-    response = requests.post(LINK)
-    print(f"Status Code: {response.status_code}")
-    print(response.json())
-    #Ideas for tommor 
-    #Find the highest ID to get the UserID & task ID
+    userid = int(input("What is your UserID?: "))
+    title = input('What is the Todo title: ')
+    complete = False
+
+    todo = {
+        "userId": userid,
+        "title" : title,
+        "completed": complete
+    }
+
+    create_response = requests.post(LINK, json=todo)
+    if create_response.status_code == 201:
+        response.append(create_response.json())
+
+   
+
 
 #Update a Todo in the List
 def update_todo():
-    pass
+    bfound = False
+
+    while not bfound:
+        id = int(input('Provide me the ID: '))
+        for task in response:
+            if id == task['id']:
+                title = input('What should the Todo be: ').lower()
+                todo = {'title': title}
+                update_response = requests.put(f"{LINK}/{id}",json=todo)
+                if update_response.status_code == 200:
+                    task['title'] = title
+                bfound = True
+            
+        if not bfound:
+            print('That ID does not exist try again')
+
+            
+
+        
 #Delete a todo from the List
 def delete_todo():
     pass
