@@ -8,7 +8,8 @@ def menu():
 
     while True:
        print("1. View all TODO's")
-       print("3. Find todos by user")
+       print('2. View todo by todo ID')
+       print("3. Find todos by userID")
        print("4. Create todo")
        print("5. Update todo")
        print("6. Delete todo")

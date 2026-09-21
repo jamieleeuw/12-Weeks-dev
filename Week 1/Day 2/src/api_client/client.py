@@ -18,7 +18,7 @@ def view_todo():
 
 #View Todo's by ID
 def view_todo_by_id(id):
-    response_id = requests.get(f'https://jsonplaceholder.typicode.com/todos/{id}')
+    response_id = requests.get(f'{LINK}/{id}')
     response_id = response_id.json()
 
     
@@ -31,7 +31,7 @@ def view_todo_by_id(id):
 
 #View Todo by UserID
 def post_todo(userId):
-    response_id = requests.get(f'https://jsonplaceholder.typicode.com/todos?userId={userId}')
+    response_id = requests.get(f'{LINK}?userId={userId}')
     response_id = response_id.json()
 
     print(f'Userid #{userId}')
@@ -57,6 +57,7 @@ def add_todo():
     create_response = requests.post(LINK, json=todo)
     if create_response.status_code == 201:
         response.append(create_response.json())
+        print('Task Created!!!')
 
    
 
@@ -74,6 +75,7 @@ def update_todo():
                 update_response = requests.put(f"{LINK}/{id}",json=todo)
                 if update_response.status_code == 200:
                     task['title'] = title
+                    print('Task Updated!!!')
                 bfound = True
             
         if not bfound:
@@ -84,5 +86,16 @@ def update_todo():
         
 #Delete a todo from the List
 def delete_todo():
-    pass
+    bfound = False
+
+    while not bfound:
+        id = int(input('Provide me the ID: '))
+        for task in response:
+            if id == task['id']:
+                delete_response = requests.delete(f"{LINK}/{id}")
+                if delete_response.status_code == 200:
+                    response.pop(task)
+                bfound = True
+        if not bfound:
+            print('That ID does not exist try again')
 
