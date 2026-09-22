@@ -23,21 +23,19 @@ def view_todo_by_id(id):
 
     try:
         response_id = requests.get(f'{LINK}/{id}')
+        response_id.raise_for_status()
         response_id = response_id.json()
     except requests.exceptions.RequestException as e:
         print(f"Could not get Todo #{id}: {e}")
         return
 
     
-    print(f'Todo #{response_id['id']}')
-    print(f'Title: {response_id['title']}')
-    print(f'User:{response_id['userId']}')
-    print(f'Completed: {response_id['completed']}')
+    return response_id
 
         
 
 #View Todo by UserID
-def post_todo(userId):
+def view_todos_by_user(userId):
     try:
 
         response_id = requests.get(f'{LINK}?userId={userId}')
@@ -46,25 +44,11 @@ def post_todo(userId):
         print(f"Could not get todos for User #{userId}: {e}")
         return
 
-    print(f'Userid #{userId}')
-    print("/////////////////////")
-
-    for task in response_id:      
-        print(f'Title: {task['title']}')
-        print(f'Completed: {task['completed']}')
+    return response_id
 
 
 #Create a Todo & add to the List
-def add_todo():
-    try:
-        userid = int(input("What is your UserID?: "))
-    except ValueError:
-        print("UserID must be a number.")
-        return
-    
-    title = input('What is the Todo title: ')
-    complete = False
-
+def add_todo(userid,title,complete):
     todo = {
         "userId": userid,
         "title" : title,
@@ -83,18 +67,12 @@ def add_todo():
 
 
 #Update a Todo in the List
-def update_todo():
+def update_todo(id,title):
     bfound = False
 
     while not bfound:
-        try:
-            id = int(input('Provide me the ID: '))
-        except ValueError:
-            print('That is not a valid ID, try again')
-            continue
         for task in response:
             if id == task['id']:
-                title = input('What should the Todo be: ').lower()
                 todo = {'title': title}
                 try:
                     update_response = requests.put(f"{LINK}/{id}",json=todo)
@@ -112,15 +90,10 @@ def update_todo():
 
         
 #Delete a todo from the List
-def delete_todo():
+def delete_todo(id):
     bfound = False
 
     while not bfound:
-        try:
-            id = int(input('Provide me the ID: '))
-        except ValueError:
-            print('That is not a valid ID, try again')
-            continue
         for task in response:
             if id == task['id']:
                 try:
