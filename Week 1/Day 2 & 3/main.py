@@ -20,7 +20,12 @@ def menu():
            continue
        
        if choice == 1:
-           todo.view_todo()
+           print('These are all the tasks: ')
+           print('////////////////////////////')
+           response = todo.view_todo()
+
+           for task in response:
+                print(f"{task['id']}. {task['title']} : {task['completed']}")
        elif choice == 2:
            user_choice = input('What ID are you looking for: ')
            task = todo.view_todo_by_id(logic.input_(user_choice))
@@ -42,17 +47,21 @@ def menu():
            title = input('What is the Todo title: ')
            complete = False
            approved = logic.user_id(userID)
-           todo.add_todo(approved,title,complete)
+           if todo.add_todo(approved,title,complete):
+               print("Task created!!!")
+    
        elif choice == 5:
            id = (input('Provide me the ID: '))
            id  = logic.input_(id)
            title = input('What should the Todo be: ').lower()
 
-           todo.update_todo(id,title)
+           if todo.update_todo(id,title):
+                print('Task Updated!!!')
        elif choice == 6:
            id = (input('Provide me the ID: '))
            id  = logic.input_(id)
-           todo.delete_todo(id)
+           if todo.delete_todo(id):
+               print("Todo deleted!!")
        elif choice == 7:
             print("Thank you for using my CLI TODO List!!!")
             break

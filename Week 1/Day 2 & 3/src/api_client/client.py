@@ -1,4 +1,5 @@
 import requests,json
+import logging
 
 LINK = 'https://jsonplaceholder.typicode.com/todos'
 FILE = "data.json"
@@ -6,17 +7,15 @@ FILE = "data.json"
 
 try:
     response = requests.get(LINK)
+    response.raise_for_status()
     response = response.json()
 except requests.exceptions.RequestException as e:
-    print(f"Could not load todos: {e}")
+    logging.error(f"Could not load todos: {e}")
     response = []
 
 #View all the Todo's
 def view_todo():
-    print('These are all the tasks: ')
-    print('////////////////////////////')
-    for task in response:
-        print(f"{task['id']}. {task['title']} : {task['completed']}")
+    return response
 
 #View Todo's by ID
 def view_todo_by_id(id):
@@ -26,10 +25,8 @@ def view_todo_by_id(id):
         response_id.raise_for_status()
         response_id = response_id.json()
     except requests.exceptions.RequestException as e:
-        print(f"Could not get Todo #{id}: {e}")
+        logging.error(f"Could not get Todo #{id}: {e}")
         return
-
-    
     return response_id
 
         
@@ -37,11 +34,11 @@ def view_todo_by_id(id):
 #View Todo by UserID
 def view_todos_by_user(userId):
     try:
-
         response_id = requests.get(f'{LINK}?userId={userId}')
+        response_id.raise_for_status()
         response_id = response_id.json()
     except requests.exceptions.RequestException as e:
-        print(f"Could not get todos for User #{userId}: {e}")
+        logging.error(f"Could not get todos for User #{userId}: {e}")
         return
 
     return response_id
@@ -57,11 +54,12 @@ def add_todo(userid,title,complete):
     try:
         
         create_response = requests.post(LINK, json=todo)
+        create_response.raise_for_status()
         if create_response.status_code == 201:
             response.append(create_response.json())
-            print('Task Created!!!')
+            return True
     except requests.exceptions.RequestException as e:
-        print(f"Could not create task: {e}")
+        logging.error(f"Could not create task: {e}")
 
    
 
@@ -78,13 +76,14 @@ def update_todo(id,title):
                     update_response = requests.put(f"{LINK}/{id}",json=todo)
                     if update_response.status_code == 200:
                         task['title'] = title
-                        print('Task Updated!!!')
+                        return True
                 except requests.exceptions.RequestException as e:
-                     print(f"Could not update task: {e}")
+                     logging.error(f"Could not update task: {e}")
                 bfound = True
             
         if not bfound:
             print('That ID does not exist try again')
+            break
 
             
 
@@ -100,9 +99,12 @@ def delete_todo(id):
                     delete_response = requests.delete(f"{LINK}/{id}")
                     if delete_response.status_code == 200:
                         response.remove(task)
+                        return True
                 except requests.exceptions.RequestException as e:
-                    print(f"Could not delete task: {e}")
+                    logging.error(f"Could not delete task: {e}")
                 bfound = True
+        
         if not bfound:
             print('That ID does not exist try again')
+            break
 
