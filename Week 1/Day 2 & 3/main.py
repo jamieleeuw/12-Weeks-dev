@@ -29,18 +29,23 @@ def menu():
        elif choice == 2:
            user_choice = input('What ID are you looking for: ')
            task = todo.view_todo_by_id(logic.input_(user_choice))
-           print(f'Todo #{task['id']}')
-           print(f'Title: {task['title']}')
-           print(f'User:{task['userId']}')
-           print(f'Completed: {task['completed']}')
+           if type(task) is dict: 
+            print(f'Todo #{task['id']}')
+            print(f'Title: {task['title']}')
+            print(f'User:{task['userId']}')
+            print(f'Completed: {task['completed']}')
        elif choice == 3:
            user_choice = input('What userID are you looking for: ')
            response = todo.view_todos_by_user(logic.user_id(user_choice))
-           print(f'Userid #{user_choice}')
-           print("/////////////////////")
-           for task in response:
-            print(f'Title: {task['title']}')
-            print(f'Completed: {task['completed']}')
+           if response:
+                print(f'Userid #{user_choice}')
+                print("/////////////////////")
+                for task in response:
+                    print(f'Title: {task['title']}')
+                    print(f'Completed: {task['completed']}')
+           else:
+               print(f'UserID: {user_choice} doesnt exist')
+               
            
        elif choice == 4:
            userID = ('What is the UserID: ')
