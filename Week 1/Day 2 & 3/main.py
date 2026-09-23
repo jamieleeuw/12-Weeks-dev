@@ -1,77 +1,113 @@
 import src.api_client.client as todo
 import service.todo_logic as logic
-    
+import database.db as db
+
 
 def menu():
 
     while True:
-       print("1. View all TODO's")
-       print('2. View todo by todo ID')
-       print("3. Find todos by userID")
-       print("4. Create todo")
-       print("5. Update todo")
-       print("6. Delete todo")
-       print("7. Exit")
+        print("1. View all TODO's")
+        print("2. View todo by todo ID")
+        print("3. Find todos by userID")
+        print("4. Create todo")
+        print("5. Update todo")
+        print("6. Delete todo")
+        print("7. Exit")
 
-       try:
-        choice = int(input('Choose an option from (1-7): '))
-       except ValueError:
-           print("Only Enter Valid Numbers!!")
-           continue
-       
-       if choice == 1:
-           print('These are all the tasks: ')
-           print('////////////////////////////')
-           response = todo.view_todo()
+        try:
+            choice = int(input("Choose an option from (1-7): "))
+        except ValueError:
+            print("Only Enter Valid Numbers!!")
+            continue
 
-           for task in response:
-                print(f"{task['id']}. {task['title']} : {task['completed']}")
-       elif choice == 2:
-           user_choice = input('What ID are you looking for: ')
-           task = todo.view_todo_by_id(logic.input_(user_choice))
-           if type(task) is dict: 
-            print(f'Todo #{task['id']}')
-            print(f'Title: {task['title']}')
-            print(f'User:{task['userId']}')
-            print(f'Completed: {task['completed']}')
-       elif choice == 3:
-           user_choice = input('What userID are you looking for: ')
-           response = todo.view_todos_by_user(logic.user_id(user_choice))
-           if response:
-                print(f'Userid #{user_choice}')
-                print("/////////////////////")
-                for task in response:
-                    print(f'Title: {task['title']}')
-                    print(f'Completed: {task['completed']}')
-           else:
-               print(f'UserID: {user_choice} doesnt exist')
-               
-           
-       elif choice == 4:
-           userID = ('What is the UserID: ')
-           title = input('What is the Todo title: ')
-           complete = False
-           approved = logic.user_id(userID)
-           if todo.add_todo(approved,title,complete):
-               print("Task created!!!")
-    
-       elif choice == 5:
-           id = (input('Provide me the ID: '))
-           id  = logic.input_(id)
+        if choice == 1:
+            print("These are all the tasks: ")
+            print("////////////////////////////")
+            response = db.get_todos()
+
+            for task in response:
+                print(f"ID : {task[0]}")
+                print(f"title : {task[1]}")
+                print(f"Completed : {task[2]}")
+                print("///////////////////////")
+        elif choice == 2:
+            user_choice = input("What ID are you looking for: ")
+            task = db.get_todo_by_id(logic.input_(user_choice))
+            if type(task) is tuple:
+                print(f"Todo #{task[0]}")
+                print(f"Title: {task[1]}")
+                print(f"User:{task[3]}")
+                print(f"Completed: {task[2]}")
+            else:
+                print(f'Todo #{user_choice} doesnt exist please create a todo first')
+        elif choice == 3:
+            user_choice = input("What userID are you looking for: ")
+            task = db.get_user_todo(logic.user_id(user_choice))
+            if type(task) is tuple:
+                print(f"ID #{task[0]}")
+                print(f"title: {task[1]}")
+                print(f"complete: {task[2]}")
+            else:
+               print(f"UserID {user_choice} doesn't exist, let's create one")
+               name = input('Whats your name: ')
+               surname = input('Whats your surname: ')
+               new_id = db.create_user(name, surname)
+               print(f'User created with userId {new_id}!! add a TODO with that userID')
+        elif choice == 4:
            title = input('What should the Todo be: ').lower()
-
-           if todo.update_todo(id,title):
+           user_choice = input('What is your userID: ')
+           user_id = logic.user_id(user_choice)
+ 
+           if user_id is False:
+               print("Only Enter Valid Numbers!!")
+               continue
+ 
+           existing_user = db.get_user_by_id(user_id)
+           if not existing_user:
+               print(f"UserID {user_id} doesn't exist, let's create one")
+               name = input('Whats your name: ')
+               surname = input('Whats your surname: ')
+               new_id = db.create_user(name, surname)
+               if not new_id:
+                   continue
+               user_id = new_id
+ 
+           result = db.create_todo(title, user_id)
+           if result:
+               print(f'Todo created with TODOID {result}!!')
+        elif choice == 5:
+           id = (input('Provide me the TodoID: '))
+           id  = logic.input_(id)
+           if id is False:
+               print("Only Enter Valid Numbers!!")
+               continue
+ 
+           existing = db.get_todo_by_id(id)
+           if not existing:
+               print(f'Todo #{id} doesnt exist create a todo first')
+               continue
+ 
+           title = input('What should the Todo be: ').lower()
+           if db.update_todo(id, title, existing[2]):
                 print('Task Updated!!!')
-       elif choice == 6:
+        elif choice == 6:
            id = (input('Provide me the ID: '))
            id  = logic.input_(id)
-           if todo.delete_todo(id):
+           if id is False:
+               print("Only Enter Valid Numbers!!")
+               continue
+           existing = db.get_todo_by_id(id)
+           if not existing:
+               print(f'Todo #{id} doesnt exist create a todo first')
+               continue
+           
+           if db.delete_todo(id):
                print("Todo deleted!!")
-       elif choice == 7:
+        elif choice == 7:
             print("Thank you for using my CLI TODO List!!!")
             break
-       else:
-           print("Only Enter Valid Numbers!!")
-        
+        else:
+            print("Only Enter Valid Numbers!!")
+
 
 menu()
