@@ -87,7 +87,7 @@ def get_user_todo(userid):
 
     try:
         curr.execute('SELECT * FROM todos WHERE user_id = ?',(userid,))
-        todo = curr.fetchone()
+        todo = curr.fetchall()
         return todo
     except sqlite3.Error as e:
         print(f"Error fetching todo for user {userid}: {e}")

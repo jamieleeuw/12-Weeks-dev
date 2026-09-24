@@ -43,16 +43,17 @@ def menu():
         elif choice == 3:
             user_choice = input("What userID are you looking for: ")
             task = db.get_user_todo(logic.user_id(user_choice))
-            if type(task) is tuple:
-                print(f"ID #{task[0]}")
-                print(f"title: {task[1]}")
-                print(f"complete: {task[2]}")
-            else:
-               print(f"UserID {user_choice} doesn't exist, let's create one")
-               name = input('Whats your name: ')
-               surname = input('Whats your surname: ')
-               new_id = db.create_user(name, surname)
-               print(f'User created with userId {new_id}!! add a TODO with that userID')
+            for todo in task:
+                if type(todo) is tuple:
+                    print(f"ID #{todo[0]}")
+                    print(f"title: {todo[1]}")
+                    print(f"complete: {todo[2]}")
+                else:
+                    print(f"UserID {user_choice} doesn't exist, let's create one")
+                    name = input('Whats your name: ')
+                    surname = input('Whats your surname: ')
+                    new_id = db.create_user(name, surname)
+                    print(f'User created with userId {new_id}!! add a TODO with that userID')
         elif choice == 4:
            title = input('What should the Todo be: ').lower()
            user_choice = input('What is your userID: ')
