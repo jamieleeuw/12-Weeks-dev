@@ -1,4 +1,3 @@
-import src.api_client.client as todo
 import service.todo_logic as logic
 import database.db as db
 
